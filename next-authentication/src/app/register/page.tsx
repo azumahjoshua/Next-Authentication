@@ -1,7 +1,7 @@
 'use client'
 import RegistrationForm from "./form";
 
-import { signIn } from "next-auth/react";
+
 // interface FormData {
 //     name: string;
 //     email: string;

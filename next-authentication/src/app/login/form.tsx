@@ -1,9 +1,8 @@
 'use client'
 
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { signIn,signOut,useSession } from 'next-auth/react';
 
 
 interface FormData {
@@ -12,6 +11,8 @@ interface FormData {
 }
 
 const Login = () => {
+  const {data:session} = useSession()
+  console.log({session})
   const router = useRouter()
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -27,18 +28,17 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const data = new FormData(e.currentTarget);
-    const response = await signIn('credentials',{
-      email:formData.email,
-      password:formData.password,
-      redirect:false
-    })
-    if(response?.ok){
-      router.push('/dashboard')
-    }else{
-      router.push('/login')
+    try {
+      const response = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+      router.push('/dashboard'); // Redirect to dashboard after successful login
+    } catch (error) {
+      console.error('Error during login:', error);
+      // Handle error gracefully (e.g., show error message to the user)
     }
-    // onSubmit(formData);
   };
 
   return (
